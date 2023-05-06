@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model countrycode {
+  CountryCode String      @id @db.VarChar(3)
+  CountryName String?     @db.VarChar(100)
+  employment  employment?
+  gdp         gdp?
+  geography   geography?
+  population  population?
+}
+
+model employment {
+  CountryCode                  String      @id @db.VarChar(3)
+  Employment_Percent           Float?
+  AgricultureEmployees_Percent Float?
+  IndustryEmployees_Percent    Float?
+  ServicesEmployees_Percent    Float?
+  countrycode                  countrycode @relation(fields: [CountryCode], references: [CountryCode], onDelete: NoAction, onUpdate: NoAction, map: "employment_ibfk_1")
+}
+
+model gdp {
+  CountryCode       String      @id @db.VarChar(3)
+  GDP_USD           Float?
+  GDPPerCap_USD     Float?
+  GDPgrowth_Percent Float?
+  countrycode       countrycode @relation(fields: [CountryCode], references: [CountryCode], onDelete: NoAction, onUpdate: NoAction, map: "gdp_ibfk_1")
+}
+
+model geography {
+  CountryCode             String      @id @db.VarChar(3)
+  SurfaceArea_km2         Float?
+  AgricultureLand_Percent Float?
+  ArableLand_Percent      Float?
+  countrycode             countrycode @relation(fields: [CountryCode], references: [CountryCode], onDelete: NoAction, onUpdate: NoAction, map: "geography_ibfk_1")
+}
+
+model population {
+  CountryCode       String      @id @db.VarChar(3)
+  Population        Float?
+  PopDensity_perkm2 Float?
+  PopGrowth_Percent Float?
+  BirthRate_Per1000 Float?
+  DeathRate_Per1000 Float?
+  LifeExpectancy    Float?
+  countrycode       countrycode @relation(fields: [CountryCode], references: [CountryCode], onDelete: NoAction, onUpdate: NoAction, map: "population_ibfk_1")
+}
